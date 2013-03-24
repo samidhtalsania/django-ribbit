@@ -31,11 +31,22 @@ class AuthenticateForm(AuthenticationForm):
 		form = super(AuthenticateForm,self).is_valid()
 		for f,error in self.errors.iteritems():
 			if f!='__all__':
-				self.fields[f].widget.attrs.update({'class': 'error ribbitText'})
+				self.fields[f].widget.attrs.update({'class':'error','value':strip_tags(error})
 		return form
 
-		class Meta:
-			model = Ribbit
-			exclude = ('user')
-			
+		
+
+class RibbitForm(forms.ModelForm):
+    content = forms.CharField(required=True, widget=forms.widgets.Textarea(attrs={'class': 'ribbitText'}))
+ 
+    def is_valid(self):
+        form = super(RibbitForm, self).is_valid()
+        for f in self.errors.iterkeys():
+            if f != '__all__':
+                self.fields[f].widget.attrs.update({'class': 'error ribbitText'})
+        return form
+ 
+    class Meta:
+        model = Ribbit
+        exclude = ('user',)
 
